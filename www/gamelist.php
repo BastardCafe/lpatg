@@ -33,11 +33,13 @@ $db= GetDB();
 $query= "SELECT * FROM game WHERE id NOT IN (SELECT gameid FROM gameplay) ORDER BY title ASC";
 $dbres= $db->query($query);
 if ($dbres) {
+  /*
   $page.='<div data-role="fieldcontain"><label for="playedselect">Show played games</label>
     <select name="playedselect" id="playedselect" data-role="slider">
       <option value="no"></option>
       <option value="yes"></option>
     </select></div>' . PHP_EOL;
+   */
   $page.='<ul data-role="listview" data-inset="true" data-autodividers="true" data-filter="true">' . PHP_EOL;
   while ($row= $dbres->fetch_assoc()) {
     $page.= '<li><a href="#" onClick="SetGameData('.$row['id'].','.$row['bbgid'].');">'.$row['title'].'</a></li>' . PHP_EOL;
