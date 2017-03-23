@@ -11,26 +11,17 @@ if (key_exists('accesstoken', $_SESSION)) {
   $accessToken= $_SESSION['accesstoken'];
   $response= $fb->get('/me?fields=id,name', $accessToken);
   $user= $response->getGraphUser();
+} else if (key_exists('gameid', $_GET)) {
 } else {
   $dir= dirname($_SERVER['PHP_SELF']);
-  die('Unauthorized');
-//  header('Location: '.$dir);
-  exit;
+  header('Location: ' . $dir);
+  die;
 }
-$gameid= intval($_POST['gameid']);
-/*
-if (!key_exists('gameid', $_POST)) {
-  if (!key_exists('gameid', $_GET)) {
-    $dir= dirname($_SERVER['PHP_SELF']);
-    header('Location: '.$dir);
-    exit;
-  } else {
-    $gameid= intval($_GET['gameid']);
-  }
-} else {
+$gameid= 0;
+if (key_exists('gameid', $_POST)) {
   $gameid= intval($_POST['gameid']);
 }
- */
+
 $db= GetDB();
 $query= "SELECT
   g.title,
@@ -40,9 +31,15 @@ FROM
   gameplay gp
   INNER JOIN player p ON gp.playerid=p.id
   INNER JOIN game g ON gp.gameid=g.id
-WHERE
+";
+if ($gameid > 0) {
+  $query.=
+"WHERE
   g.id = ?
-ORDER BY
+";
+}
+$query.=
+"ORDER BY
   gp.gamedate DESC,
   p.name ASC";
 
@@ -58,5 +55,12 @@ if ($stmt) {
   }
 }
 
-header('Content-Type: application/json; charset=utf-8');
-print(json_encode($result));
+if ($gameid > 0) {
+  header('Content-Type: application/json; charset=utf-8');
+  print(json_encode($result));
+} else {
+  header('Content-Type: text/html; charset=utf-8');
+  foreach($result as $gameplay) {
+    echo 'Date: ' . $gameplay['gamedate'] . ' Game: ' . $gameplay['gametitle'] . ' by ' . $gameplay['playername'] . '<br/>';
+  }
+}
