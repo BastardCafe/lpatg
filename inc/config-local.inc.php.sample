@@ -1,0 +1,17 @@
+<?php
+// Fill this out with appropriate values for your setup
+$dbConfig = array(
+  'user' => 'username',
+  'host' => 'hostname',
+  'database' => 'database name',
+  'password' => 'very secret password'
+);
+$facebookConfig = array(
+  'app_id' => 'Your app ID from Facebook',
+  'app_secret' => 'Very secret key from Facebook',
+  'default_graph_version' => 'v2.5'
+)
+
+// Point this to your local copy of the Facebook SDK from:
+// https://github.com/facebook/php-graph-sdk
+$graphIncludePath = '/path/to/your/copy/of/php-graph-sdk-5.0.0';
