@@ -38,7 +38,7 @@ if ($dbres) {
     <select name="playedselect" id="playedselect" data-role="slider">
       <option value="no"></option>
       <option value="yes"></option>
-    </select></div>' . PHP_EOL;
+      </select></div>' . PHP_EOL;
    */
   $page.='<ul data-role="listview" data-inset="true" data-autodividers="true" data-filter="true">' . PHP_EOL;
   while ($row= $dbres->fetch_assoc()) {
@@ -47,6 +47,7 @@ if ($dbres) {
   $page.='</ul>' . PHP_EOL;
 }
 
+$currentDate= '"' . date('Y-m-d') . '"';
 $page.='
   </div>
 </div>
@@ -57,11 +58,16 @@ $page.='
     <form method="post" action="gameplayed.php">
       <h3>Player name: '.$user['name'].'</h3>
 <div>
-      <input type="hidden" name="gamedate" id="gamedate" data-role="date" data-inline="true" />
+<div>
+  <input name="gamedate" id="gamedate" data-role="datebox"
+  data-options=\'{"mode":"calbox","useInline":true,"showInitialValue":true,"overrideDateFormat":"%Y-%m-%d","calHighToday":false,"hideInput":true}\'/>
 </div>
+</div>
+<div>
+      <input type="submit" value="Submit" data-icon="check" data-iconpos="right" />
       <input type="hidden" name="gameid" id="gameid" />
       <input type="hidden" name="bggid" id="bggid" />
-      <input type="submit" value="Submit" data-icon="check" data-iconpos="right" />
+</div>
     </form>
   </div>
   <div data-role="collapsible" id="previousplaysheader">
@@ -102,11 +108,6 @@ $("#previousplays").append(\'<li><span class="ui-content">\' + item.gamedate + \
   });
 }
 $(document).ready(function() {
-  $.datepicker.setDefaults({
-    dateFormat: "yy-mm-dd",
-    minDate: "2017-03-01",
-    autoSize: true
-  });
   $("#playername").textinput("disable");
 });
 </script>
