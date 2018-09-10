@@ -10,16 +10,23 @@ if ((count($argv) > 1) && ($argv[1] == 'c')) {
   curl_setopt($curl, CURLOPT_URL, 'https://www.boardgamegeek.com/xmlapi2/collection/?username=bastardcafe&own=1&subtype=boardgame&excludesubtype=boardgameexpansion');
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
   curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 5);
-  $gamelist= curl_exec($curl);
+  if (!$gamelist= curl_exec($curl)) {
+    die("Curl error: " . curl_error($curl));
+  }
   curl_close($curl);
 } else {
   print('Reading from local file' . PHP_EOL);
   $gamelist= file_get_contents('../gamelist.xml');
 }
 
+libxml_use_internal_errors(true);
 $document= simplexml_load_string($gamelist);
-if ($gamelist === false) {
-  echo "Failed loading XML:";
+if ($document === false) {
+  echo "Failed parsing XML:" . PHP_EOL . $gamelist;
+  $xmlErrors = libxml_get_errors();
+  foreach ($xmlErrors as $error) {
+    echo "XML Error: " . $error . PHP_EOL;
+  }
   die;
 }
 
