@@ -25,7 +25,7 @@ if ($document === false) {
   echo "Failed parsing XML:" . PHP_EOL . $gamelist;
   $xmlErrors = libxml_get_errors();
   foreach ($xmlErrors as $error) {
-    echo "XML Error: " . $error . PHP_EOL;
+    echo "XML Error: " . $error->message . PHP_EOL;
   }
   die;
 }
